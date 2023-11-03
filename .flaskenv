@@ -1,3 +1,3 @@
-FLASK_APP=authz
+FLASK_APP=CloudNative-Microservice-Architektur
 FLASK_ENV=development
 FLASK_DEBUG=1
