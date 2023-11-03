@@ -5,29 +5,26 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate
 from authz.util import check_request_content_type
 
-
 from authz.config import Config
 
 db = SQLAlchemy()
 mg = Migrate()
 ma = Marshmallow()
 
-
 apiv1_bp = Blueprint("apiv1", __name__, url_prefix="/api/v1")
 apiv1 = Api(apiv1_bp)
 
-from authz import resource  # must be located here, after apiv1.
-
+from authz import resource  # Muss an dieser Stelle stehen, nach apiv1.
 
 def create_app():
-    print("run")
+    print("Starte")
     app = Flask(__name__)
-    app.config.from_object(Config)  # Load Config from environments variables.
+    app.config.from_object(Config)  # Lädt die Konfiguration aus Umgebungsvariablen.
     app.before_request_funcs[None].append(
         check_request_content_type
-    )  # Check Content Type for every single request.
-    db.init_app(app)  # init SQLAlchemy Database object.
-    mg.init_app(app, db)  # init  database management and migrate object.
-    ma.init_app(app)  # init marshmallow object.
+    )  # Überprüft den Content-Type für jede Anfrage.
+    db.init_app(app)  # Initialisiert das SQLAlchemy-Datenbankobjekt.
+    mg.init_app(app, db)  # Initialisiert das Datenbankmanagement und das Migrate-Objekt.
+    ma.init_app(app)  # Initialisiert das Marshmallow-Objekt.
     app.register_blueprint(apiv1_bp)
     return app
