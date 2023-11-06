@@ -8,7 +8,7 @@ class Config:
     # Mindestens 256 Zeichen und komplex für die Produktion
     SECRET_KEY = environ.get("TOYBOX_AUTHZ_SECRET_KEY", "STARKES_GEHEIMES_SCHLÜSSELWORT")
     JSONIFY_PRETTYPRINT_REGULAR = True
-    TIMEZONE = environ.get("TOYBOY_AUTHZ_TIMEZONE", "Asia/Tehran")
+    TIMEZONE = environ.get("TOYBOY_AUTHZ_TIMEZONE")
 
     ######################### Datenbankkonfiguration #########################
     SQLALCHEMY_DATABASE_URI = environ.get("TOYBOY_AUTHZ_DATABASE_URI", None)
