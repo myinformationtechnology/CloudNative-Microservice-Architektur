@@ -1,0 +1,42 @@
+---
+- name: Automatisiere die Einrichtung von MAAS
+  hosts: maas_hosts
+  become: yes
+  vars_files:
+    - myvault.yaml
+  tasks:
+    - name: Finde MAAS-Anwendung
+      command: which maas
+      ignore_errors: yes
+      tags: preinstall
+
+    - name: Überprüfe MAAS-Installation
+      fail: msg="MAAS ist nicht installiert"
+      when: "'/usr/bin/maas' not in maas_path.stdout"
+      tags: preinstall
+
+    - name: Aktualisiere APT-Cache und aktualisiere das System
+      apt:
+        update_cache: yes
+        upgrade: dist
+      tags: install
+
+    - name: Füge MAAS APT-Repository hinzu
+      apt_repository:
+        repo: 'ppa:maas/stable'
+      tags: install
+
+    - name: Installiere MAAS-Paket
+      apt:
+        name: maas
+        state: latest
+      tags: install
+
+    - name: Erstelle MAAS Admin-Benutzer
+      shell: "maas createadmin --username {{ mass_admin_user }} --password {{ mass_admin_password }} --email {{ mass_admin_email }}"
+      tags: init
+
+    - name: Gebe MAAS-Info aus
+      debug:
+        msg: "MAAS-URL: http://{{ ansible_fqdn }}/MAAS"
+      tags: info
